@@ -2,6 +2,12 @@ require 'sinatra'
 require 'debugger'
 require 'haml'
 require 'neography'
+require 'sass'
+
+get '/screen.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  scss :screen
+end
 
 #DB_URL = ENV['DB_URL']
 #DB_USERNAME = ENV['DB_USERNAME']
@@ -40,7 +46,8 @@ end
 post '/' do
   if params[:search]
     neo = settings.neo
-    settings.results = neo.find_node_index('search', "title:#{params[:search]}").map{|x| x['data']}.to_s
+    neo_response = neo.find_node_index('search', "title:#{params[:search]}")
+    settings.results = neo_response.map{|x| x['data']} if neo_response
   end
   redirect '/'
 end

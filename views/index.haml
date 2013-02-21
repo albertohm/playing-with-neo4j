@@ -1,12 +1,38 @@
-%html
-  %body
-    %form{ :action => "", :method => "post"}
-      %label{:for => "search"} Search title:
-      %input{:type => "text", :name => "search", :class => "text"}
-      %input{:type => "submit", :value => "Send", :class => "button"}
+%form{ :action => "", :method => "post"}
+  %label{:for => "search"} Search title:
+  %input{:type => "text", :name => "search", :class => "text"}
+  %input{:type => "submit", :value => "Send", :class => "button"}
 
 
-    - if @results
-      %h1 Results
-      = @results
+- if @results
 
+  %table#mytable{:cellspacing => "0"}
+    %thead
+      %th= "Title"
+      %th= 'Studio'
+      %th= "Genre"
+      %th= "LastModified"
+      %th= "ImageUrl"
+      %th= "Runtime"
+      %th= "Homepage"
+      %th= "ReleaseDate"
+      %th= "Description"
+      %th= "Language"
+      %th= "Tagline"
+    %tbody
+      - @results.map do |result|
+        %tr
+          %td= result["title"]
+          %td= result['studio']
+          %td= result["genre"]
+          %td= result["lastModified"]
+          %td
+            %img{:src => result["imageUrl"]}
+          %td= result["runtime"]
+          %td= result["homepage"]
+          %td= result["releaseDate"]
+          %td= result["description"]
+          %td= result["language"]
+          %td= result["tagline"]
+- else
+  %p Please search something
