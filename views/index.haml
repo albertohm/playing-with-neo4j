@@ -1,0 +1,12 @@
+%html
+  %body
+    %form{ :action => "", :method => "post"}
+      %label{:for => "search"} Search title:
+      %input{:type => "text", :name => "search", :class => "text"}
+      %input{:type => "submit", :value => "Send", :class => "button"}
+
+
+    - if @results
+      %h1 Results
+      = @results
+

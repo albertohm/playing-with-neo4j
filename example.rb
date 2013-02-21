@@ -1,14 +1,14 @@
 require 'sinatra'
 require 'debugger'
+require 'haml'
 require 'neography'
 
 #DB_URL = ENV['DB_URL']
 #DB_USERNAME = ENV['DB_USERNAME']
 #DB_PASSWORD = ENV['DB_PASSWORD']
 
-Tilt.register Tilt::ERBTemplate, 'html.erb'
-
 set :neo, Neography::Rest.new
+set :results, nil
 
 #def create_and_check_node(attributes={})
 #  @neo = settings.neo
@@ -21,15 +21,26 @@ set :neo, Neography::Rest.new
 #end
 
 
-get '/hi' do
-  @neo = settings.neo
+get '/' do
+  neo = settings.neo
 
   # number of nodes
-  neo_response = @neo.execute_query('start n=node(*) return count(n)')
-  @num_nodes = neo_response['data'].flatten[0]
+  #neo_response = neo.execute_query('start n=node(*) return count(n)')
+  #@num_nodes = neo_response['data'].flatten[0]
 
-  neo_response = @neo.execute_query('start n=node(*) match n-[r]->() return r')
-  @num_relations = neo_response['data'].size
+  # number of relations
+  #neo_response = neo.execute_query('start n=node(*) match n-[r]->() return r')
+  #@num_relations = neo_response['data'].size
 
-  erb :index
+  @results = settings.results if settings.results
+
+  haml :index
+end
+
+post '/' do
+  if params[:search]
+    neo = settings.neo
+    settings.results = neo.find_node_index('search', "title:#{params[:search]}").map{|x| x['data']}.to_s
+  end
+  redirect '/'
 end
