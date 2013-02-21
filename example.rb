@@ -44,10 +44,14 @@ get '/' do
 end
 
 post '/' do
-  if params[:search]
+  unless params[:search].empty?
     neo = settings.neo
-    neo_response = neo.find_node_index('search', "title:#{params[:search]}")
-    settings.results = neo_response ? neo_response.map{|x| x['data']} : nil
+    begin
+      neo_response = neo.find_node_index('search', "title:#{params[:search]}")
+      settings.results = neo_response ? neo_response.map{|x| x['data']} : nil
+    rescue
+      redirect '/'
+    end
   end
   redirect '/'
 end
