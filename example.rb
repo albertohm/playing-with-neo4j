@@ -47,7 +47,7 @@ post '/' do
   if params[:search]
     neo = settings.neo
     neo_response = neo.find_node_index('search', "title:#{params[:search]}")
-    settings.results = neo_response.map{|x| x['data']} if neo_response
+    settings.results = neo_response ? neo_response.map{|x| x['data']} : nil
   end
   redirect '/'
 end
