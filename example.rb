@@ -1,8 +1,8 @@
 require 'sinatra'
+require 'sass'
 require 'debugger'
 require 'haml'
 require 'neography'
-require 'sass'
 
 get '/screen.css' do
   content_type 'text/css', :charset => 'utf-8'
@@ -14,7 +14,8 @@ end
 #DB_PASSWORD = ENV['DB_PASSWORD']
 
 set :neo, Neography::Rest.new
-set :results, nil
+set :movies_results, nil
+set :people_results, nil
 
 #def create_and_check_node(attributes={})
 #  @neo = settings.neo
@@ -38,7 +39,8 @@ get '/' do
   #neo_response = neo.execute_query('start n=node(*) match n-[r]->() return r')
   #@num_relations = neo_response['data'].size
 
-  @results = settings.results if settings.results
+  @movies_results = settings.movies_results if settings.movies_results
+  @people_results = settings.people_results if settings.people_results
 
   haml :index
 end
@@ -48,7 +50,10 @@ post '/' do
     neo = settings.neo
     begin
       neo_response = neo.find_node_index('search', %[title:"#{params[:search]}"])
-      settings.results = neo_response ? neo_response.map{|x| x['data']} : nil
+      settings.movies_results = neo_response ? neo_response.map{|x| x['data']} : nil
+
+      neo_response = neo.find_node_index('people', %[name:"#{params[:search]}"])
+      settings.people_results = neo_response ? neo_response.map{|x| x['data']} : nil
     rescue
       redirect '/'
     end

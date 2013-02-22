@@ -1,11 +1,11 @@
 %form{ :action => "", :method => "post"}
-  %label{:for => "search"} Search title:
+  %label{:for => "search"} Search:
   %input{:type => "text", :name => "search", :class => "text"}
   %input{:type => "submit", :value => "Send", :class => "button"}
 
 
-- if @results
-
+- if @movies_results
+  %h3 Movies
   %table#mytable{:cellspacing => "0"}
     %thead
       %th= "Title"
@@ -20,7 +20,7 @@
       %th= "Language"
       %th= "Tagline"
     %tbody
-      - @results.map do |result|
+      - @movies_results.map do |result|
         %tr
           %td= result["title"]
           %td= result['studio']
@@ -34,5 +34,24 @@
           %td= result["description"]
           %td= result["language"]
           %td= result["tagline"]
-- else
-  %p Please search something
+
+- if @people_results
+  %h3 People
+  %table#mytable{:cellspacing => "0"}
+    %thead
+      %th= "id"
+      %th= "lastModified"
+      %th= "name"
+      %th= "profileImageUrl"
+      %th= "biography"
+      %th= "version"
+    %tbody
+      - @people_results.map do |result|
+        %tr
+          %td= result["id"]
+          %td= result["lastModified"]
+          %td= result["name"]
+          %td
+            %img{:src => result["profileImageUrl"]}
+          %td= result["biography"]
+          %td= result["version"]

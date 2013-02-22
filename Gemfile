@@ -2,7 +2,7 @@
 source "https://rubygems.org"
 
 gem 'sinatra'
-#gem 'debugger'
+gem 'debugger'
 gem 'haml'
 gem 'neography'
 gem 'sass'
